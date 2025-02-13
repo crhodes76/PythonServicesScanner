@@ -1,7 +1,8 @@
 import psutil
 import subprocess
 
-list_of_services = ["Appinfo", "BthAvctpSvc", "tzautoupdate"]
+list_of_services = ["Appinfo", "BthAvctpSvc", "tzautoupdate", "IntelAudioService", "cplspcon", "esifsvc"
+                    "LSM", "Intel(R) TPM Provisioning Service", "iphlpsvc", "wlidsvc", "WdNisSvc"]
 turn_on_feature = False
 
 def get_service(service_name):
