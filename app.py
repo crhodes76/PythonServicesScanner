@@ -1,5 +1,9 @@
 import psutil
 import subprocess
+
+list_of_services = ["Appinfo", "BthAvctpSvc", "tzautoupdate"]
+turn_on_feature = False
+
 def get_service(service_name):
     for service in psutil.win_service_iter():
         if service.name().lower() == service_name.lower():
@@ -7,12 +11,12 @@ def get_service(service_name):
     return None
 
 if __name__ == "__main__":
-    services_to_check = ["Appinfo", "BthAvctpSvc", "tzautoupdate"]
-    for service in services_to_check:
+
+    for service in list_of_services:
         the_service = get_service(service)
         if the_service:
             print(f"{the_service.display_name()} is {the_service.status()}")
-            if the_service.status() == "stopped":
+            if the_service.status() == "stopped" and turn_on_feature:
                 print('Attempting to start the service ' + the_service.display_name())
                 try:  
                     result = subprocess.run(["net", "start", the_service.name()], capture_output=True, text=True, check=True)
