@@ -5,6 +5,8 @@ list_of_services = ["Appinfo", "BthAvctpSvc", "tzautoupdate", "IntelAudioService
                     "LSM", "Intel(R) TPM Provisioning Service", "iphlpsvc", "wlidsvc", "WdNisSvc"]
 turn_on_feature = False
 
+service_to_auto_start = ["tzautoupdate"]
+
 def get_service(service_name):
     for service in psutil.win_service_iter():
         if service.name().lower() == service_name.lower():
@@ -26,5 +28,9 @@ if __name__ == "__main__":
                 finally:
                     print(f"{the_service.display_name()} has been started")
                     print(f"{the_service.display_name()} is {the_service.status()}")
+            elif the_service.status() == "stopped" and the_service.name() in service_to_auto_start and turn_on_feature == False:
+                print(f"{the_service.display_name()} is in the list of services to auto start")
+                print("Auto starting the service")
+                result = subprocess.run(["net", "start", the_service.name()], capture_output=True, text=True, check=True)
         else:
             print(f"{service} not found")
