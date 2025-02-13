@@ -1,36 +1,13 @@
-import psutil
-import subprocess
+import Modules.services_module as services_module
+import json
 
-list_of_services = ["Appinfo", "BthAvctpSvc", "tzautoupdate", "IntelAudioService", "cplspcon", "esifsvc"
-                    "LSM", "Intel(R) TPM Provisioning Service", "iphlpsvc", "wlidsvc", "WdNisSvc"]
-turn_on_feature = False
+with open("config.json", "r") as file:
+    config = json.load(file)
 
-service_to_auto_start = ["tzautoupdate"]
+list_of_services = config["services_list"]
+turn_on_feature = True if config["turn_on_feature"] == "True" else False
 
-def get_service(service_name):
-    for service in psutil.win_service_iter():
-        if service.name().lower() == service_name.lower():
-            return service
-    return None
+service_to_auto_start = config["service_to_auto_start"]
 
 if __name__ == "__main__":
-
-    for service in list_of_services:
-        the_service = get_service(service)
-        if the_service:
-            print(f"{the_service.display_name()} is {the_service.status()}")
-            if the_service.status() == "stopped" and turn_on_feature:
-                print('Attempting to start the service ' + the_service.display_name())
-                try:  
-                    result = subprocess.run(["net", "start", the_service.name()], capture_output=True, text=True, check=True)
-                except Exception as e:
-                    print(f"An exception as occurred {e}")
-                finally:
-                    print(f"{the_service.display_name()} has been started")
-                    print(f"{the_service.display_name()} is {the_service.status()}")
-            elif the_service.status() == "stopped" and the_service.name() in service_to_auto_start and turn_on_feature == False:
-                print(f"{the_service.display_name()} is in the list of services to auto start")
-                print("Auto starting the service")
-                result = subprocess.run(["net", "start", the_service.name()], capture_output=True, text=True, check=True)
-        else:
-            print(f"{service} not found")
+    services_module.check_service_status_and_start(list_of_services, service_to_auto_start, turn_on_feature)

@@ -1,0 +1,5 @@
+{
+    "services_list": ["Appinfo", "BthAvctpSvc", "tzautoupdate", "IntelAudioService", "cplspcon", "esifsvc", "LSM", "Intel(R) TPM Provisioning Service", "iphlpsvc", "wlidsvc", "WdNisSvc"],
+    "turn_on_feature": "False",
+    "service_to_auto_start": ["tzautoupdate"]
+}
